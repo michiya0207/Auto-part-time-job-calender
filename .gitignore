@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+samples/
+
+# Google認証の秘密ファイル（絶対にコミットしない）
+credentials.json
+token.json
