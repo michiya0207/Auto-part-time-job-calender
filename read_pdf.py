@@ -2,13 +2,13 @@ import pdfplumber
 from datetime import datetime, timedelta
 
 # ===== 設定（ここを変えれば挙動を調整できる）=====
-PDF_PATH = "samples/ブース表_6月_merged.pdf"
+
 NAME_KEY = "河江"      # 自分(寒河江)の目印。2文字'河江T'でも3文字'寒河江T'でも当たる部分文字列
 CLASS_MINUTES = 65     # 1コマの長さ(分)。終了時刻の計算に使う。実際の勤務に合わせて調整
 YEAR = 2026            # シフト表に「年」が無いので、ここで指定
 
 
-def read_pdf():
+def read_pdf(PDF_PATH):
     with pdfplumber.open(PDF_PATH) as pdf:
         table = []
         for page in pdf.pages:
@@ -64,6 +64,7 @@ def extract_shifts(tables):
         shifts.append({
             "year": YEAR, "month": month, "day": day,
             "start": start, "end": end,
+            "koma":len(times),
         })
 
     shifts.sort(key=lambda s: (s["month"], s["day"]))   # 月→日 の順に並べる
@@ -71,7 +72,8 @@ def extract_shifts(tables):
 
 
 if __name__ == "__main__":
-    tables = read_pdf()
+    PDF_PATH = "samples/ブース表_202605_merged.pdf"
+    tables = read_pdf(PDF_PATH)
     shifts = extract_shifts(tables)
     print(f"見つかったシフト: {len(shifts)}件")
     for s in shifts:

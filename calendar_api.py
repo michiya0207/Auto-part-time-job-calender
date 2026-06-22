@@ -54,6 +54,22 @@ def add_shift(service, shift):
     created_event = service.events().insert(calendarId="primary", body=event).execute()
     print(f"シフトを追加しました: {created_event.get('htmlLink')}")
 
+def add_salary(service, year, month, day, amount):
+    # amount を使ってタイトルを作り、その日に予定を1件登録する
+    if month == 12:
+        next_year, next_month = year + 1, 1   # 12月だけ翌年1月
+    else:
+        next_year, next_month = year, month + 1
+
+    event = {
+        "summary": f"バイト給料 ¥{amount}",
+        "start": {"date": f"{next_year}-{next_month:02d}-{day:02d}"},
+        "end":   {"date": f"{next_year}-{next_month:02d}-{day+1:02d}"},   # 終わりは翌日
+    }
+    created_event = service.events().insert(calendarId="primary", body=event).execute()
+
+
+
 
 if __name__ == "__main__":
     # 動作確認：認証して、primaryカレンダーの予定を1件だけ取得してみる
